@@ -1,4 +1,8 @@
 import Branding from '@/components/branding';
+import ContentBlock from '@/components/content-block';
+import PetDetails from '@/components/pet-details';
+import PetList from '@/components/pet-list';
+import SearchForm from '@/components/search-form';
 import Stats from '@/components/stats';
 
 export default function Page() {
@@ -8,6 +12,18 @@ export default function Page() {
         <Branding />
 
         <Stats />
+      </div>
+
+      <div>
+        <SearchForm />
+
+        <ContentBlock>
+          <PetList />
+        </ContentBlock>
+
+        <ContentBlock>
+          <PetDetails />
+        </ContentBlock>
       </div>
     </main>
   );
