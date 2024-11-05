@@ -6,6 +6,8 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import PetFormBtn from './pet-form-btn';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 type PetFormProps = {
   actionType: 'add' | 'edit';
@@ -20,6 +22,21 @@ type TPetForm = {
   notes: string;
 };
 
+const petFormSchema = z.object({
+  name: z.string().trim().min(1, { message: 'Name is required' }).max(100),
+  ownerName: z
+    .string()
+    .trim()
+    .min(1, { message: 'Owner name is required' })
+    .max(100),
+  imageUrl: z.union([
+    z.literal(''),
+    z.string().trim().url({ message: 'Image url must be a valid url' }),
+  ]),
+  age: z.coerce.number().int().positive().max(99999),
+  notes: z.union([z.literal(''), z.string().trim().max(1000)]),
+});
+
 export default function PetForm({
   actionType,
   onFormSubmission,
@@ -28,12 +45,18 @@ export default function PetForm({
 
   const {
     register,
+    trigger,
     formState: { errors },
-  } = useForm<TPetForm>();
+  } = useForm<TPetForm>({
+    resolver: zodResolver(petFormSchema),
+  });
 
   return (
     <form
       action={async (formData) => {
+        const result = await trigger();
+        if (!result) return;
+
         onFormSubmission();
 
         const petData = {
