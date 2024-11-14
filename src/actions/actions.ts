@@ -12,25 +12,12 @@ import { redirect } from 'next/navigation';
 // -------------user actions--------------
 
 export async function logIn(formData: unknown) {
-  // check formData is a FormData type
   if (!(formData instanceof FormData)) {
-    return {
-      message: 'Invalid form data.',
-    };
+    console.error('Invalid form data.');
+    return;
   }
 
-  // convert formData to an object
-  const formDataObject = Object.fromEntries(formData.entries());
-
-  // validate the object
-  const validatedFormDataObject = authSchema.safeParse(formDataObject);
-  if (!validatedFormDataObject.success) {
-    return {
-      message: 'Invalid form data.',
-    };
-  }
-
-  await signIn('credentials', formDataObject);
+  await signIn('credentials', formData);
 
   redirect('/app/dashboard');
 }
