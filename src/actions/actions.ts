@@ -24,10 +24,14 @@ export async function logIn(formData: unknown) {
 }
 
 export async function logOut() {
+  await sleep(1000);
+
   await signOut({ redirectTo: '/' });
 }
 
 export async function signUp(formData: unknown) {
+  await sleep(1000);
+
   // check if formdata is a FormData type
   if (!(formData instanceof FormData)) {
     console.error('Invalid form data.');
@@ -57,8 +61,9 @@ export async function signUp(formData: unknown) {
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
-        console.error('Email already exists.');
-        return;
+        return {
+          message: 'Email already exists.',
+        };
       }
     }
   }
