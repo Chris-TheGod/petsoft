@@ -14,6 +14,8 @@ import { AuthError } from 'next-auth';
 // -------------user actions--------------
 
 export async function logIn(prevState: unknown, formData: unknown) {
+  await sleep(1000);
+
   if (!(formData instanceof FormData)) {
     console.error('Invalid form data.');
     return;
