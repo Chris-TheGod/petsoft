@@ -26,15 +26,28 @@ export async function logOut() {
   await signOut({ redirectTo: '/' });
 }
 
-export async function signUp(formData: FormData) {
-  const hashedPassword = await bcrypt.hash(
-    formData.get('password') as string,
-    10
-  );
+export async function signUp(formData: unknown) {
+  // check if formdata is a FormData type
+  if (!(formData instanceof FormData)) {
+    console.error('Invalid form data.');
+    return;
+  }
 
+  // convert formData to a plain object
+  const formDataEntries = Object.fromEntries(formData.entries());
+
+  // validation
+  const validatedFormData = authSchema.safeParse(formDataEntries);
+  if (!validatedFormData.success) {
+    console.error('Invalid form data.');
+    return;
+  }
+
+  const { email, password } = validatedFormData.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
   await prisma.user.create({
     data: {
-      email: formData.get('email') as string,
+      email,
       hashedPassword,
     },
   });
