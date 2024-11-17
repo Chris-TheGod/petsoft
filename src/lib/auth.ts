@@ -75,6 +75,7 @@ const config = {
       if (user) {
         // on sign in
         token.userId = user.id;
+        token.hasAccess = user.hasAccess;
       }
 
       return token;
@@ -82,6 +83,7 @@ const config = {
     session: ({ session, token }) => {
       if (session.user) {
         session.user.id = token.userId;
+        session.user.hasAccess = token.hasAccess;
       }
 
       return session;
