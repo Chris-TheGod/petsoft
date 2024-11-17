@@ -1,4 +1,6 @@
 export async function POST(request: Request) {
   const body = await request.text();
-  console.log(body);
+
+  // return 200 OK
+  return Response.json(null, { status: 200 });
 }
